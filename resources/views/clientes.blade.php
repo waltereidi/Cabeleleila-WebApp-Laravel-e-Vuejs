@@ -80,7 +80,10 @@
           </form>
           
         </br>
-
+        <div id="app">
+          
+          
+       </div>
 </div>
 </div>
 @endsection

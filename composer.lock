@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ddcabab5a06aa01be7212714414f2dac",
+    "content-hash": "adddb2405f1b48c774bfef81329fea31",
     "packages": [
         {
             "name": "brick/math",
@@ -973,6 +973,59 @@
                 }
             ],
             "time": "2021-10-07T12:57:01+00:00"
+        },
+        {
+            "name": "jamesdordoy/laravelvuedatatable",
+            "version": "1.3.8",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/jamesdordoy/Laravel-Vue-Datatable_Laravel-Package.git",
+                "reference": "97caa1161c7bedcc1a54ad4d818c7e18eadcd916"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/jamesdordoy/Laravel-Vue-Datatable_Laravel-Package/zipball/97caa1161c7bedcc1a54ad4d818c7e18eadcd916",
+                "reference": "97caa1161c7bedcc1a54ad4d818c7e18eadcd916",
+                "shasum": ""
+            },
+            "require-dev": {
+                "orchestra/testbench": "^3.7",
+                "phpunit/phpunit": "^7.5"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "JamesDordoy\\LaravelVueDatatable\\Providers\\LaravelVueDatatableServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "JamesDordoy\\LaravelVueDatatable\\": "src/"
+                },
+                "classmap": [
+                    "src/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "authors": [
+                {
+                    "name": "James Dordoy",
+                    "email": "jamesdordoy@gmail.com"
+                }
+            ],
+            "support": {
+                "issues": "https://github.com/jamesdordoy/Laravel-Vue-Datatable_Laravel-Package/issues",
+                "source": "https://github.com/jamesdordoy/Laravel-Vue-Datatable_Laravel-Package/tree/1.3.8"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/jamesdordoy",
+                    "type": "github"
+                }
+            ],
+            "time": "2020-09-15T13:35:59+00:00"
         },
         {
             "name": "laravel/framework",
@@ -2328,85 +2381,6 @@
                 }
             ],
             "time": "2023-02-25T19:38:58+00:00"
-        },
-        {
-            "name": "protonemedia/laravel-splade",
-            "version": "1.4.15.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/protonemedia/laravel-splade.git",
-                "reference": "b8c1daa37f429abd5129d3b14e1146754142e3dc"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/protonemedia/laravel-splade/zipball/b8c1daa37f429abd5129d3b14e1146754142e3dc",
-                "reference": "b8c1daa37f429abd5129d3b14e1146754142e3dc",
-                "shasum": ""
-            },
-            "require": {
-                "illuminate/contracts": "^9.41|^10.0",
-                "php": "^8.0 || ^8.1 || ^8.2"
-            },
-            "require-dev": {
-                "laravel/pint": "^1.0",
-                "nunomaduro/collision": "^6.0",
-                "nunomaduro/larastan": "^2.0.1",
-                "orchestra/testbench": "^7.7|^8.0",
-                "phpunit/phpunit": "^9.5"
-            },
-            "suggest": {
-                "kirschbaum-development/eloquent-power-joins": "Required to enable support sorting by (nested) relationships in Splade Tables (^2.6)",
-                "maatwebsite/excel": "Required to enable support exports in Splade Tables (^3.1)",
-                "spatie/fractalistic": "Required to enable support for Fractal transformers (^2.9)"
-            },
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "ProtoneMedia\\Splade\\ServiceProvider"
-                    ],
-                    "aliases": {
-                        "Animation": "ProtoneMedia\\Splade\\Facades\\Animation",
-                        "SEO": "ProtoneMedia\\Splade\\Facades\\SEO",
-                        "Splade": "ProtoneMedia\\Splade\\Facades\\Splade",
-                        "Toast": "ProtoneMedia\\Splade\\Facades\\Toast"
-                    }
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "ProtoneMedia\\Splade\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Pascal Baljet",
-                    "email": "pascal@protone.media",
-                    "role": "Developer"
-                }
-            ],
-            "description": "Laravel Splade: the magic of Inertia.js with the simplicity of Blade.",
-            "homepage": "https://github.com/protonemedia/laravel-splade",
-            "keywords": [
-                "laravel",
-                "laravel-splade",
-                "protonemedia"
-            ],
-            "support": {
-                "issues": "https://github.com/protonemedia/laravel-splade/issues",
-                "source": "https://github.com/protonemedia/laravel-splade/tree/1.4.15.1"
-            },
-            "funding": [
-                {
-                    "url": "https://github.com/pascalbaljet",
-                    "type": "github"
-                }
-            ],
-            "time": "2023-06-26T20:54:51+00:00"
         },
         {
             "name": "psr/container",

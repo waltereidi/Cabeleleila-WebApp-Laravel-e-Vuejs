@@ -6,7 +6,7 @@ const mix = require('laravel-mix');
 // mix.css('resources/css/bootstrap.min.css');
 // mix.js('resources/js/bootstrap.min.js' , 'public/js');
 // mix.js('resources/js/bootstrap.min.js.map' , 'public/js')
-// mix.js('resources/js/app.js', 'public/js').vue().copy('node_modules/jquery/dist/jquery.min.js', 'public/js');
+    mix.js('resources/js/app.js', 'public/js').vue().copy('node_modules/jquery/dist/jquery.min.js', 'public/js');
 
 // mix.css('resources/css/layout.css', 'public/css');
 

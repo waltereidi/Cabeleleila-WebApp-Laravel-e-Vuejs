@@ -4,20 +4,22 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use ProtoneMedia\Splade\SpladeTable;
-use App\Models\Clientes;
+use App\Clientes;
+use JamesDordoy\LaravelVueDatatable\Http\Resources\DataTableCollectionResource;
 
 class ClientesController extends Controller
 {
-    
-    public function retorna(){
-        $clientes = Clientes::get();
-
-        return view('clientes' , [
-            'clientes' => SpladeTable::for($clientes)
-                ->column('id')
-                ->column('nome')
-        ]);
+    public function index(Request $request)
+    {   
+        $length = $request->input('length');
+        $sortBy = $request->input('column');
+        $orderBy = $request->input('dir');
+        $searchValue = $request->input('search');
         
+        $query = Clientes::eloquentQuery($sortBy, $orderBy, $searchValue);
+
+        $data = $query->paginate($length);
+        
+        return new DataTableCollectionResource($data);
     }
 }
