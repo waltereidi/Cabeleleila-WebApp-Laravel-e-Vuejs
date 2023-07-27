@@ -15,13 +15,13 @@ return new class extends Migration
             $table->id();
             $table->timestamps();
             $table->string('nome');
-            $table->string('email')->nullable();
-            $table->string('cpf')->nullable();
-            $table->string('rg')->nullable();
+            $table->string('email')->nullable()->unique();
+            $table->string('cpf')->nullable()->unique();
+            $table->string('rg')->nullable()->unique();
             $table->string('telefone');
             $table->string('telefone2')->nullable();
             $table->string('observacao')->nullable();
-            $table->datetime('dataaniversario')->nullable();
+            $table->datetime('datanascimento')->nullable();
 
         });
         DB::table('clientes')->insert(     

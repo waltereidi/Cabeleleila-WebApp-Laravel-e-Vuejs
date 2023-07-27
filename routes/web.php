@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController ; 
+use App\Http\Controllers\ClientesController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -49,14 +50,9 @@ Route::get('/servicos', function () {
         return view('login');
     }
 });
+Route::get('/clientes' , [ ClientesController::class , 'index' ]); 
+Route::post('clientes/cadastrarClientes' , [ClientesController::class , 'cadastrarClientes']); 
 
-Route::get('/clientes', function () {
-    if( session()->has('email') && session()->has('tipousuario')){
-        return view('clientes');
-    }else{
-        return view('login');
-    }
-});
 
 Route::fallback(function () {
     if( session()->has('email') && session()->has('tipousuario')){
