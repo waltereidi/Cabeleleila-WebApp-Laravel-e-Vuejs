@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->timestamps();
             $table->datetime('dataagendamento');
+            $table->datetime('datatermino');
             $table->string('descricao')->nullable();
             $table->string('observacao')->nullable();
             $table->integer('situacaoagendamento')->comment('1-ativo ,2-em andamento ,9-finalizado,10-cancelado');

@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController ; 
 use App\Http\Controllers\ClientesController;
+use App\Http\Controllers\ServicosController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -26,15 +27,16 @@ Route::get('/', function () {
     }
 });
 
+//Login
 Route::get('/login', function () {
     return view('login');
 });
-
 Route::get('logout' , [ AuthController::class , 'logout' ]); 
-
 Route::post('login/authLogin' , [AuthController::class , 'postLogin']);
 Route::post('login/authRegistrar', [ AuthController::class , 'postRegistrar']);
 
+
+//Gerenciamento
 Route::get('/gerenciamento', function () {
     if( session()->has('email') && session()->has('tipousuario')){
         return view('gerenciamento  ');
@@ -43,6 +45,7 @@ Route::get('/gerenciamento', function () {
     }
 });
 
+//Servicos
 Route::get('/servicos', function () {
     if( session()->has('email') && session()->has('tipousuario')){
         return view('servicos');
@@ -50,10 +53,15 @@ Route::get('/servicos', function () {
         return view('login');
     }
 });
+Route::post('/servicos/cadastrarServicos' , [ServicosController::class , 'cadastrarServicos']); 
+
+
+//Clientes
 Route::get('/clientes' , [ ClientesController::class , 'index' ]); 
-Route::post('clientes/cadastrarClientes' , [ClientesController::class , 'cadastrarClientes']); 
+Route::post('/clientes/cadastrarClientes' , [ClientesController::class , 'cadastrarClientes']); 
 
 
+//Rota Default
 Route::fallback(function () {
     if( session()->has('email') && session()->has('tipousuario')){
         return view('paginaInicial');

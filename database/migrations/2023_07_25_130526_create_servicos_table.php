@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('nome');
             $table->string('descricao')->nullable();
             $table->decimal('preco');
+            $table->time('tempoestimado')->default('00:00:00');
             
         });
 
@@ -24,17 +25,20 @@ return new class extends Migration
             array([
                 'nome'=>'Corte masculino simples', 
                 'descricao'=> '' , 
-                'preco' => 12.00 
+                'preco' => 12.00 ,
+                'tempoestimado'=>'00:30:00'
             ],
             [
                 'nome'=>'Corte feminino simples', 
                 'descricao'=> '' , 
-                'preco' => 20.00 
+                'preco' => 20.00 ,
+                'tempoestimado' => '01:00:00'
             ],
             [
                 'nome'=>'Creme de cabelo', 
                 'descricao'=> '' , 
-                'preco' => 15.00 
+                'preco' => 15.00 ,
+                'tempoestimado' => '00:30:00'
             ]
             )
             );

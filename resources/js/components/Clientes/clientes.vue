@@ -1,9 +1,12 @@
 <script>
+    import axios from 'axios';
+
   export default {
    
     data() {
         return {
-            abrirModal : false 
+            abrirModal : false ,
+            token : ''
         }
     }, 
     methods:{
@@ -14,7 +17,6 @@
                     }
         }
     }
-
   }
 </script>
 <style scoped>
@@ -27,7 +29,7 @@
     legend{
         border: 2px  ;
         border-radius: 4px;
-        font-size: 1.2em;
+        font-size: 1.4em;
     }
     legend:hover{
         color : aqua;
@@ -36,20 +38,17 @@
 
 </style>
 <template>
-    <div class="container">
-        <div class="row">
-            
-                <fieldset>
-                    <legend v-on:click="abrirModal= abrirModal == false">Cadastrar novo cliente</legend>
-                <form v-bind:class="getClass(abrirModal)" action="/clientes/cadastrarClientes" method="POST">
+                 <fieldset>
+                      <legend v-on:click="abrirModal= abrirModal == false">Cadastrar novo cliente</legend>
+                    <div v-bind:class="getClass(abrirModal)">
                     <div class="row">
                         <div class="form-group col-md-6">
-                            <label for="inputPassword4">Nome</label>
-                            <input type="text" class="form-control form-control-sm" name="nome" placeholder="Password">
+                            <label>Nome</label>
+                            <input type="text" class="form-control form-control-sm" name="nome" placeholder="Nome completo">
                         </div>
 
                         <div class="form-group col-md-6">
-                            <label for="inputEmail4">Email</label>
+                            <label>Email</label>
                             <input type="email" class="form-control form-control-sm" name="email" placeholder="Email">
                         </div>
                         
@@ -57,11 +56,11 @@
 
                     <div class="row">
                             <div class="form-group col-md-6">
-                            <label for="inputAddress">Cpf</label>
+                            <label>Cpf</label>
                             <input type="text" class="form-control form-control-sm" name="cpf" placeholder="000.000.000-00">
                         </div>
                         <div class="form-group col-md-6">
-                            <label for="inputAddress2">Rg</label>
+                            <label>Rg</label>
                             <input type="text" class="form-control form-control-sm" name="rg" placeholder="00.000.000-0">
                         </div>
 
@@ -69,26 +68,26 @@
                     
                     <div class="row">
                         <div class="form-group col-md-6">
-                            <label for="inputAddress">Telefone</label>
+                            <label>Telefone</label>
                             <input type="text" class="form-control form-control-sm" name="telefone" placeholder="00 00000-0000">
                         </div>
                         <div class="form-group col-md-6">
-                            <label for="inputAddress2">Telefone 2</label>
+                            <label>Telefone 2</label>
                             <input type="text" class="form-control form-control-sm" name="telefone2" placeholder="00 00000-0000">
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="form-group col-md-6">
-                            <label for="inputAddress">Data de nascimento</label>
-                            <input type="date" class="form-control form-control-sm" name="datanascimento" placeholder="00 00000-0000">
+                            <label>Data de nascimento</label>
+                            <input type="date" class="form-control form-control-sm" name="datanascimento" >
                         </div>
                         
                     </div>
 
                     <div class="row">
                         <div class="form-group">
-                            <label for="exampleFormControlTextarea1">Observações</label>
+                            <label>Observações</label>
                             <textarea class="form-control" name="observacao" rows="3"></textarea>
                         </div>
                     </div>
@@ -97,8 +96,6 @@
                             <button type="submit" class="btn btn-primary">Cadastrar cliente</button>
                         </div>
                     <br>
-                    </form>
-                </fieldset>    
-            </div>
-        </div>
+                </div>
+            </fieldset>   
 </template>
