@@ -21,7 +21,7 @@ use App\Http\Controllers\ServicosController;
 
 Route::get('/', function () {
     if( session()->has('email') && session()->has('tipousuario')){
-        return view('paginaInicial');
+        return view('agendamentos');
     }else{
         return view('login');
     }
@@ -64,7 +64,7 @@ Route::post('/clientes/cadastrarClientes' , [ClientesController::class , 'cadast
 //Rota Default
 Route::fallback(function () {
     if( session()->has('email') && session()->has('tipousuario')){
-        return view('paginaInicial');
+        return view('agendamentos');
     }else{
         return view('login');
     }

@@ -150,17 +150,17 @@ export default {
             <td scope="col">{{ row.updated_at }} </td>
         </tr>
         <tr :id="'editarLinha'+row.id" class="escondido" >
-            <td :ref="'id'+row.id"  :value="row.id" >{{  row.id }} </td>
-            <td><input :ref="'nome' + row.id " class="form-control" type="text" :value="row.nome" maxlength="60" > </td>
-            <td><input :ref="'email' + row.id " class="form-control" type="email" :value="row.email" maxlength="60"  > </td>
-            <td><input :ref="'cpf' + row.id " class="form-control" type="text" :value="row.cpf" maxlength="15" > </td>
-            <td><input :ref="'rg' + row.id " class="form-control" type="text" :value="row.rg"  maxlength="15"> </td>
-            <td><input :ref="'telefone' + row.id " class="form-control" type="text" :value="row.telefone" maxlength="15"  > </td>
-            <td><input :ref="'telefone2' + row.id " class="form-control" type="text" :value="row.telefone2" maxlength="15" > </td>
-            <td><input :ref="'observacao' + row.id " class="form-control" type="text" :value="row.observacao" maxlength="255" > </td>
-            <td><input :ref="'datanascimento' + row.id " class="form-control" type="date" :value="row.datanascimento" > </td>
-            <td><button :id="'modificar'+ row.id " @click="modificar(row.id)" class="btn btn-warning">Modificar</button> </td>
-            <td><button :id="'editar'+row.id" @click="deletar(row.id)" class="btn btn-danger">Deletar</button> </td>
+            <td  class="p-3 mb-2 bg-warning text-dark"  :ref="'id'+row.id"  :value="row.id" >{{  row.id }} </td>
+            <td  class="p-3 mb-2 bg-warning text-dark" ><input :ref="'nome' + row.id " class="form-control" type="text" :value="row.nome" maxlength="60" > </td>
+            <td  class="p-3 mb-2 bg-warning text-dark" ><input :ref="'email' + row.id " class="form-control" type="email" :value="row.email" maxlength="60"  > </td>
+            <td  class="p-3 mb-2 bg-warning text-dark" ><input :ref="'cpf' + row.id " class="form-control" type="text" :value="row.cpf" maxlength="15" > </td>
+            <td  class="p-3 mb-2 bg-warning text-dark" ><input :ref="'rg' + row.id " class="form-control" type="text" :value="row.rg"  maxlength="15"> </td>
+            <td  class="p-3 mb-2 bg-warning text-dark" ><input :ref="'telefone' + row.id " class="form-control" type="text" :value="row.telefone" maxlength="15"  > </td>
+            <td  class="p-3 mb-2 bg-warning text-dark" ><input :ref="'telefone2' + row.id " class="form-control" type="text" :value="row.telefone2" maxlength="15" > </td>
+            <td  class="p-3 mb-2 bg-warning text-dark" ><input :ref="'observacao' + row.id " class="form-control" type="text" :value="row.observacao" maxlength="255" > </td>
+            <td  class="p-3 mb-2 bg-warning text-dark" ><input :ref="'datanascimento' + row.id " class="form-control" type="date" :value="row.datanascimento" > </td>
+            <td  class="p-3 mb-2 bg-warning text-dark" ><button :id="'modificar'+ row.id " @click="modificar(row.id)" class="btn btn-secondary" >Modificar</button> </td>
+            <td  class="p-3 mb-2 bg-warning text-dark" ><button :id="'editar'+row.id" @click="deletar(row.id)" class="btn btn-danger">Deletar</button> </td>
         </tr>
     </tbody>
 

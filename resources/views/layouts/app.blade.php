@@ -21,7 +21,7 @@
           @if ( !session()->has('email') )
           <a class="navbar-brand" href="/login">Login</a>
           @else 
-          <a class="navbar-brand" href="/paginaInicial">Agendamentos</a>
+          <a class="navbar-brand" href="/agendamentos">Agendamentos</a>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
