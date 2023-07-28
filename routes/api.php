@@ -9,6 +9,12 @@ use App\Http\Controllers\ClientesController;
 use App\Http\Controllers\ServicosController ; 
 use App\Models\Servicos;
 
+use App\Http\Controllers\AgendamentosController; 
+use App\Models\Agendamentos ; 
+
+use App\Http\Controllers\AgendamentoServicosController; 
+use App\Model\AgendamentoServicos;
+
 use App\Http\Controllers\GerenciamentoController; 
 
 /*
@@ -87,8 +93,25 @@ Route::get('servicos/getServicosPaginacao', function (Request $request ) {
 
     return Servicos::skip($parametros['inicio'])->limit(50)->get();
 });
+
 //Agendamentos
-Route::delete('clientes/deleteAgendamento/{id}' , [AgendamentoController::class ,'deletarAgendamento' ]);
+Route::delete('agendamentos/deleteAgendamentos/{id}' , [AgendamentosController::class ,'deletarAgendamento' ]);
+Route::get('agendamentos/getClientes'  , function(){
+    return Clientes::select('id' , 'nome', 'telefone' )->get();
+}) ;
+Route::get('agendamentos/getServicos' , function(){
+    return Servicos::select('id' , 'nome' , 'preco' , 'tempoestimado')->get();
+});
+Route::post('agendamentos/getAgendamentosPaginacao' , function(Request $request){
+    $parametros = $request->all(); 
+    return Agendamentos::skip($parametros['inicio'])->limit(50)->get();
+});
+Route::post('agendamentos/getAgendamentosSemana',[ AgendamentosController::class , 'getAgendamentosSemana']);
+Route::post('agendamentos/cadastrarAgendamentos',[ AgendamentosController::class , 'cadastrarAgendamentos']);
+Route::get('agendamentos/getAgendamentos' , [ AgendamentosController::class  , 'getAgendamentos'] ); 
+Route::get('agendamentos/getAgendamentosPaginacao' , [ AgendamentosController::class , 'getAgendamentosPaginacao']  );
+Route::get('agendamentos/getBuscaAgendamentos' , [ AgendamentosController::class  , 'getBuscaAgendamentos'] );
+
 
 //Gerenciamento
-Route::delete('clientes/deleteAgendamentoServico/{id}' , [ AgendamentoServicoController::class , 'deletarAgendamentoServico' ]);
+Route::delete('clientes/deleteAgendamentoServico/{id}' , [ AgendamentosServicoController::class , 'deletarAgendamentoServico' ]);

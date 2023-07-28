@@ -27,6 +27,7 @@
         "vue-loader": "^17.0.1"
     },
     "dependencies": {
+        "lodash": "^4.17.21",
         "vue": "^3.2.36",
         "vue-loader": "^17.0.0",
         "vue-resizable": "^2.1.7",

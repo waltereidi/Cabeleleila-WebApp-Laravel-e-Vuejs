@@ -14,16 +14,12 @@ return new class extends Migration
         Schema::create('agendamentoservicos', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->integer('qtd')->default(0);
-            $table->decimal('desconto')->default(0);
-            $table->decimal('acrecimo')->default(0);
-
-            $table->integer('servico_id')->unsigned();
-            $table->foreign('servico_id')
+            $table->integer('servicos_id')->unsigned();
+            $table->foreign('servicos_id')
                 ->references('id')->on('servicos');
             
-            $table->integer('agendamento_id')->unsigned();
-            $table->foreign('agendamento_id')
+            $table->integer('agendamentos_id')->unsigned();
+            $table->foreign('agendamentos_id')
                 ->references('id')->on('agendamentos');
         });
     }

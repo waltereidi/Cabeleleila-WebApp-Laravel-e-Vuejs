@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AgendamentosController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController ; 
 use App\Http\Controllers\ClientesController;
@@ -14,9 +15,6 @@ use App\Http\Controllers\ServicosController;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
-
-
 
 
 Route::get('/', function () {
@@ -60,6 +58,8 @@ Route::post('/servicos/cadastrarServicos' , [ServicosController::class , 'cadast
 Route::get('/clientes' , [ ClientesController::class , 'index' ]); 
 Route::post('/clientes/cadastrarClientes' , [ClientesController::class , 'cadastrarClientes']); 
 
+//EditarAgendamentos 
+Route::get('/editarAgendamentos/{id}' , [AgendamentosController::class , 'editarAgendamentos']);
 
 //Rota Default
 Route::fallback(function () {

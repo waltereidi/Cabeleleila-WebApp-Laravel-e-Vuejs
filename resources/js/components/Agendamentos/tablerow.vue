@@ -2,6 +2,7 @@
 import axios from 'axios';
 
 export default {
+    props : ['email' , 'tipousuario'], 
     data(){
         return {
             dataSource : [],
@@ -19,10 +20,10 @@ export default {
             this.debouncedInput = setTimeout(() => {
                     
                 if(this.busca === ''){
-                    axios.get('api/servicos/getServicos').then(response => (this.dataSource = response.data));      
+                    axios.get('api/agendamentos/getAgendamentos').then(response => (this.dataSource = response.data));      
                 }else{
-                    axios.get('api/servicos/getBuscaServicos?coluna='+this.select+'&busca='+this.busca).then(response => ( this.dataSource = response.data ));
-                    console.log(this.dataSource);
+                    axios.get('api/agendamentos/getBuscaAgendamentos?coluna='+this.select+'&busca='+this.busca).then(response => ( this.dataSource = response.data ));
+                    //console.log(this.dataSource);
                 }
             }, 250);
         },
@@ -32,12 +33,12 @@ export default {
                 if(this.inicio < 50 ){
                     this.inicio = 0 ;
                 }
-                axios.get('api/servicos/getServicosPaginacao?inicio='+this.inicio).then(response => (this.dataSource = response.data));
+                axios.get('api/agendamentos/getAgendamentosPaginacao?inicio='+this.inicio).then(response => (this.dataSource = response.data));
             }
         },
         paginaSeguinte(){
             this.inicio = this.inicio+50; 
-            axios.get('api/servicos/getServicosPaginacao?inicio='+this.inicio).then(response => (this.dataSource = response.data));
+            axios.get('api/agendamentos/getAgendamentosPaginacao?inicio='+this.inicio).then(response => (this.dataSource = response.data));
         },
         editarLinha(id){
             const editar = document.getElementById('editarLinha'+id);
@@ -49,8 +50,8 @@ export default {
         }, 
         deletar(id){
             if(window.confirm('Deseja realmente deletar a linha de id '+id+' ?')){
-                const requisicao = axios.delete('api/servicos/deleteServicos/'+id);
-                console.log(requisicao);
+                const requisicao = axios.delete('api/agendamentos/deleteAgendamentos/'+id);
+                //console.log(requisicao);
                 for (let i = 0; i < this.dataSource.length; i++) {
                     if (this.dataSource[i].id === id) {
                         this.dataSource.splice(i, 1);
@@ -60,25 +61,11 @@ export default {
             }
         },
         modificar(id){
-           const inputs = ['id'+id ,'nome'+id ,'descricao'+id ,'preco'+id ,'tempoestimado'+id  ];
-           if(confirm("Deseja realmente alterar este valor?")){
-               const data= {
-                   id : id , 
-                   nome : this.$refs[inputs[1]][0].value , 
-                   descricao : this.$refs[inputs[2]][0].value , 
-                   preco : this.$refs[inputs[3]][0].value , 
-                   tempoestimado : this.$refs[inputs[4]][0].value 
-               };
-               
-               const request = axios.post('api/servicos/modificarServicos' , data );
-               
-               axios.get('api/servicos/getServicos').then(response => (this.dataSource = response.data));
-           }
+            window.location.href = '/editarAgendamentos/'+id;
         }
-        
   },
     mounted() {
-        axios.get('api/servicos/getServicos').then(response => (this.dataSource = response.data));
+        axios.get('api/agendamentos/getAgendamentos').then(response => (this.dataSource = response.data));
         
 
     },
@@ -97,51 +84,51 @@ export default {
         <div class="input-group">
             <button class="btn btn-link" @click="paginaAnterior" >&lt</button>&nbsp<button type="button" class="btn btn-light">{{ inicio }} - {{ inicio+50 }}</button>&nbsp
             <select class="custom-select" v-model="select" >
-                <option value="Nome" selected>Nome</option>
+                <option value="Descricao" selected>Descrição</option>
                 <option value="Id" >Id</option>
                 <option value="Preco" >Preço</option>
-                <option value="Descricao" >Descrição</option>
-                <option value="Tempoestimado" >Tempo estimado</option>
-                <option value="Ultima alteracao">Última alteração</option>
-                <option value="Criado em" >Criado em</option>
+                <option value="dataagendamento" >Data do agendamento</option>
+                <option value="SituacaoAgendamento" >Situação do agendamento</option>
+                <option value="clientes_id" >Nome do cliente</option>
+                <option value="Usuarios_id" >Usuário Responsável</option>
             </select>
           <input type="text" class="form-control" aria-label="Text input with dropdown button"
           v-model="busca" @input="getBuscas">
           <button class="btn btn-link" @click="paginaSeguinte">&gt</button>
         </div>
 
-<table class="table table-dark" >
+<table class="table table-dark table-hover" >
     
     <thead >
         <tr>
             <th scope="col">Id</th>
-            <th scope="col">Nome</th>
-            <th scope="col">Preco</th>
             <th scope="col">Descricao</th>
-            <th scope="col">Tempo Estimado</th>
-            <th scope="col">Ultima alteração</th>
-            <th scope="col">Criado em</th>
+            <th scope="col">Data agendamento</th>
+            <th scope="col">Situação</th>
+            <th scope="col">Usuário Responsável</th>
+            <th scope="col">Nome do cliente</th>
+            <th scope="col">Preço</th>
         </tr>
     </thead >
 
     <tbody  v-for="row in dataSource" >
         <tr :id="'linha'+row.id" @click="editarLinha(row.id)" >
             <td scope="col">{{ row.id }}</td>
-            <td scope="col">{{ row.nome }}</td>
-            <td scope="col">{{ row.preco }}</td>
             <td scope="col">{{ row.descricao }}</td>
-            <td scope="col">{{ row.tempoestimado }}</td>
-            <td scope="col">{{ row.criadoem }}</td>
-            <td scope="col">{{ row.ultimaalteracao }}</td>
+            <td scope="col">{{ row.dataagendamento }}</td>
+            <td scope="col">{{ row.situacao }}</td>
+            <td scope="col">{{ row.usuariosnome }}</td>
+            <td scope="col">{{ row.clientesnome }}</td>
+            <td scope="col">{{ row.preco }}</td>
         </tr>
         <tr :id="'editarLinha'+row.id" class="escondido" >
             <td  class="p-3 mb-2 bg-warning text-dark" :ref="'id' + row.id " > {{ row.id  }} </td>
-            <td  class="p-3 mb-2 bg-warning text-dark" ><input :ref="'nome' + row.id " class="form-control" type="text" maxlength="60" :value="row.nome"  > </td>
-            <td  class="p-3 mb-2 bg-warning text-dark" ><input :ref="'preco' + row.id " class="form-control"  type="number" step="0.01" :value="row.preco"  > </td>
-            <td  class="p-3 mb-2 bg-warning text-dark" ><input :ref="'descricao' + row.id " class="form-control" type="text" maxlength="255" :value="row.descricao"  > </td>
-            <td  class="p-3 mb-2 bg-warning text-dark" ><input :ref="'tempoestimado' + row.id " class="form-control" type="time" :value="row.tempoestimado"  > </td>
+            <td  class="p-3 mb-2 bg-warning text-dark" ></td>
+            <td  class="p-3 mb-2 bg-warning text-dark" ></td>
+            <td  class="p-3 mb-2 bg-warning text-dark" ></td>
+            <td  class="p-3 mb-2 bg-warning text-dark" ></td>
             <td  class="p-3 mb-2 bg-warning text-dark" ><button :id="'modificar'+ row.id " @click="modificar(row.id)" class="btn btn-secondary" >Modificar</button> </td>
-            <td  class="p-3 mb-2 bg-warning text-dark" ><button :id="'editar'+row.id" @click="deletar(row.id)" class="btn btn-danger">Deletar</button> </td>
+            <td  class="p-3 mb-2 bg-warning text-dark" ><button :id="'editar'+row.id" @click="deletar(row.id)" class="btn btn-danger" :disabled="this.tipousuario != 1">Deletar</button> </td>
         </tr>
     </tbody>
 

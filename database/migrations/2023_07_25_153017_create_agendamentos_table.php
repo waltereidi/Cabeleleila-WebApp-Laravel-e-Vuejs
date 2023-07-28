@@ -15,12 +15,12 @@ return new class extends Migration
             $table->id();
             $table->timestamps();
             $table->datetime('dataagendamento');
-            $table->datetime('datatermino');
+            $table->datetime('datatermino')->nullable();
             $table->string('descricao')->nullable();
             $table->string('observacao')->nullable();
             $table->integer('situacaoagendamento')->comment('1-ativo ,2-em andamento ,9-finalizado,10-cancelado');
-            $table->decimal('desconto')->default(0);
-            $table->decimal('acrecimo')->default(0);
+            $table->decimal('desconto')->default(0)->nullable();
+            $table->decimal('acrescimo')->default(0)->nullable();
 
             $table->integer('usuarios_id')->unsigned();
             $table->foreign('usuarios_id')->references('id')->on('usuarios');

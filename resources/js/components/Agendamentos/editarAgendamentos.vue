@@ -23,12 +23,6 @@
         }
     }, 
     methods:{
-        getClass(param) {
-            return {
-                'modalCadastroServicos' : param ,
-                'esconderModal' : !param 
-                }
-        } , 
         adicionarServico(){
             if(this.servicosDataSourceSelect){
             let jaExiste = false ; 
@@ -62,8 +56,6 @@
                         this.servicosTempo = horas.toString().padStart(2, '0')+':'+minutos.toString().padStart(2, '0');
                     }
                 }
-                
-                
             }
             }
         },
@@ -124,58 +116,7 @@
             }
             
     },
-    cadastrarAgendamento(){
-        let clientes_id =this.clientesDataSourceSelect.replace('clientes_id' , '') ;
-        let dados = {
-        "clientes_id" : clientes_id ,
-        "dataagendamento" : this.dataAgendamento  };
-        console.log(JSON.stringify(dados));
-        let dadosCadastro = {
-                     "servicos" : this.servicosSelecionadosDataSource ,
-                     "clientes_id" : clientes_id ,
-                     "descricao" : this.descricao ,
-                     "desconto" : this.desconto ,
-                     "acrescimo" : this.acrescimo ,
-                     "dataagendamento" : this.dataAgendamento ,
-                     "observacao" : this.observacao ,
-                     "email" : this.email ,
-                };
-        
-        let requestCadastro = function(){
-            axios.post('api/agendamentos/cadastrarAgendamentos' , dadosCadastro ).then( retornoCadastro =>{
-                    if(retornoCadastro.data=='OK'){
-                        window.location.href=('/agendamentos');
-                    }else{
-                        alert(retornoCadastro.data);
-                    }
-                });
-        }
-
-         axios.post('api/agendamentos/getAgendamentosSemana' , dados).then(retorno =>{ 
-          if( retorno.data[0] == 'OK'){  
-
-            requestCadastro();
-        }else{
-            if(this.dataAgendamento != retorno.data.dataagendamento ){
-                let mensagem ="Já existe um agendamento deste cliente nesta semana,deseja utilizar a mesma data deste agendamento"
-                +retorno.data.dataagendamento.replace('/[a-zA-Z]/g', retorno.data.dataagendamento )
-                +"?";
-
-                if(confirm(mensagem)){
-                    this.dataAgendamento = retorno.data.dataagendamento ; 
-                    alert("Data do agendamento modificada!");
-                }else{
-                    requestCadastro();
-                }
-            }else{
-                requestCadastro();
-                               
-            }
-        }
-        } );
-    }
     },
-    
     mounted(){
         const dataAtual = moment.utc();
                 const dataSaoPaulo = dataAtual.tz('America/Sao_Paulo');
@@ -209,8 +150,8 @@
 </style>
 <template>
                  <fieldset>
-                      <legend v-on:click="abrirModal= abrirModal == false">Cadastrar novo agendamento</legend>
-                    <div v-bind:class="getClass(abrirModal)">
+                      <legend >Cadastrar novo agendamento</legend>
+                    <div >
                     <div class="row">
                         <div class="form-group col-md-12">
                             <label >Descricao</label>

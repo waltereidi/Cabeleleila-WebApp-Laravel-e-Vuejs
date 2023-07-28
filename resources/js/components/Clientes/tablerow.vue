@@ -117,7 +117,7 @@ export default {
           <button class="btn btn-link" @click="paginaSeguinte">&gt</button>
         </div>
 
-<table class="table table-dark" >
+<table class="table table-dark " >
     
     <thead >
         <tr>
