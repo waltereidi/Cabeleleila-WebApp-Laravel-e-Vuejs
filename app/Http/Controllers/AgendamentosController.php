@@ -45,15 +45,20 @@ class AgendamentosController extends Controller
             return $validar->errors();
 
         }else{
-            $dataAgendamento = Carbon::parse($request->dataagendamento);
+            date_default_timezone_set('America/Sao_Paulo');
+            $dataAgendamento = Carbon::parse($request->dataagendamento)->setTimezone('America/Sao_Paulo');
             
-
-            $agendamento = Agendamentos::where('clientes_id' , $request->clientes_id )
-            ->where('dataagendamento' , '>=' ,$dataAgendamento->startOfWeek())
-            ->select('dataagendamento')
-            ->orderBy('dataagendamento' , 'desc')->first();
-
-            if( $agendamento!=null && $agendamento->count() > 0  && $agendamento['dataagendamento'] <= $dataAgendamento->endOfWeek()){
+            
+            $dataQuery = $request->dataagendamento;
+            $idCliente= $request->clientes_id;
+            $agendamento = DB::select(
+                "select replace(to_char(dataagendamento , 'YYYY-MM-DD HH24:mm'),' ', 'T' ) as dataagendamento ".
+                "from public.agendamentos ".
+                "where  clientes_id = ".$idCliente." and ".
+                "dataagendamento between date_trunc('week' ,DATE'".$dataQuery."') and date_trunc('week' , DATE'".$dataQuery."' )+interval '6 days' ".
+                "order by dataagendamento desc limit 1" );
+                return $agendamento ;
+            if( $agendamento!=null && $agendamento->count() > 0 ){
                 return $agendamento;
             }else{
                 return response()->json(['OK']);

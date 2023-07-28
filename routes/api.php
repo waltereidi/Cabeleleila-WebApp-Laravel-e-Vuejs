@@ -12,8 +12,6 @@ use App\Models\Servicos;
 use App\Http\Controllers\AgendamentosController; 
 use App\Models\Agendamentos ; 
 
-use App\Http\Controllers\AgendamentoServicosController; 
-use App\Model\AgendamentoServicos;
 
 use App\Http\Controllers\GerenciamentoController; 
 
@@ -117,4 +115,6 @@ Route::post('agendamentos/editarAgendamentos' , [AgendamentosController::class ,
 
 
 //Gerenciamento
-Route::delete('clientes/deleteAgendamentoServico/{id}' , [ AgendamentosServicoController::class , 'deletarAgendamentoServico' ]);
+Route::get('gerenciamento/gerenciamentosGraficoRendaMensal' , [GerenciamentoController::class , 'gerenciamentosGraficoRendaMensal']);
+Route::post('gerenciamento/getGraficoAgendamentosMensalBusca' , [GerenciamentoController::class , 'getGraficoAgendamentosMensalBusca']);
+Route::post('gerenciamento/getGraficoArrecadamentosMensalBusca' , [GerenciamentoController::class , 'getGraficoArrecadamentosMensalBusca']);

@@ -15,6 +15,7 @@ import { stringify } from 'postcss';
             servicosTempo :'00:00',
             servicoSelecionado : null ,
             dias : 0 ,
+            iniciarTransacao : false , 
 
             situacaoAgendamentos : 0 ,
             servicosSelecionadosDataSource : [] ,
@@ -123,6 +124,7 @@ import { stringify } from 'postcss';
     },
     
     editarAgendamento(){
+        this.iniciarTransacao = true ;
         let clientes_id =this.clientesDataSourceSelect.replace('clientes_id' , '') ;
         let dados = {
         "clientes_id" : clientes_id ,
@@ -132,8 +134,8 @@ import { stringify } from 'postcss';
                      "servicos" : this.servicosSelecionadosDataSource ,
                      "clientes_id" : clientes_id ,
                      "descricao" : this.descricao ,
-                     "desconto" : this.desconto ,
-                     "acrescimo" : this.acrescimo ,
+                     "desconto" :  parseFloat(this.desconto).toFixed(2),
+                     "acrescimo" : parseFloat(this.acrescimo).toFixed(2) ,
                      "dataagendamento" : this.dataAgendamento ,
                      "observacao" : this.observacao ,
                      "situacaoagendamento" : this.situacaoAgendamentos,
@@ -146,7 +148,8 @@ import { stringify } from 'postcss';
                     if(retornoCadastro.data=='OK'){
                         window.location.href=('/agendamentos');
                     }else{
-                        alert(retornoCadastro.data);
+                        alert(retornoCadastro);
+                        this.iniciarTransacao = true ;
                     }
                 });
     }
@@ -321,7 +324,7 @@ import { stringify } from 'postcss';
                     <br>        
                         <div class="form-group">
                             <button @click="editarAgendamento" class="btn btn-warning"
-                            :disabled="( (this.servicosQuantidade==0 ))"
+                            :disabled="( (this.servicosQuantidade==0 ) || this.iniciarTransacao)"
                             v-show ="this.dias>=2 || this.tipousuario == 1"
                             >Enviar modificações</button>
                         </div>

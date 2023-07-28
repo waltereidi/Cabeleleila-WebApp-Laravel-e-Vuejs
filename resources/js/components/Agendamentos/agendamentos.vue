@@ -13,6 +13,8 @@
             servicosPreco : 0.00 , 
             servicosTempo :'00:00',
             servicoSelecionado : null ,
+            iniciarTransacao : false ,
+            trocouData : false ,
 
             servicosSelecionadosDataSource : [] ,
             clientesDataSourceSelect : null ,
@@ -126,6 +128,7 @@
             
     },
     cadastrarAgendamento(){
+        this.iniciarTransacao = true ;
         let clientes_id =this.clientesDataSourceSelect.replace('clientes_id' , '') ;
         let dados = {
         "clientes_id" : clientes_id ,
@@ -135,8 +138,8 @@
                      "servicos" : this.servicosSelecionadosDataSource ,
                      "clientes_id" : clientes_id ,
                      "descricao" : this.descricao ,
-                     "desconto" : this.desconto ,
-                     "acrescimo" : this.acrescimo ,
+                     "desconto" :  parseFloat(this.desconto).toFixed(2),
+                     "acrescimo" : parseFloat(this.acrescimo).toFixed(2) ,
                      "dataagendamento" : this.dataAgendamento ,
                      "observacao" : this.observacao ,
                      "email" : this.email ,
@@ -147,24 +150,27 @@
                     if(retornoCadastro.data=='OK'){
                         window.location.href=('/agendamentos');
                     }else{
+                        this.iniciarTransacao = false ;
                         alert(retornoCadastro.data);
                     }
                 });
         }
-
          axios.post('/api/agendamentos/getAgendamentosSemana' , dados).then(retorno =>{ 
-          if( retorno.data[0] == 'OK'){  
+
+            if( retorno.data[0] == 'OK'){  
 
             requestCadastro();
         }else{
-            if(this.dataAgendamento != retorno.data.dataagendamento ){
+            if( !this.trocouData ){
                 let mensagem ="Já existe um agendamento deste cliente nesta semana,deseja utilizar a mesma data deste agendamento"
-                +retorno.data.dataagendamento.replace('/[a-zA-Z]/g', retorno.data.dataagendamento )
+                +retorno.data.dataagendamento
                 +"?";
-
                 if(confirm(mensagem)){
-                    this.dataAgendamento = retorno.data.dataagendamento ; 
+                    this.trocouData = true ;
+                    this.dataAgendamento = retorno.data[0].dataagendamento ; 
                     alert("Data do agendamento modificada!");
+                    this.iniciarTransacao = false ;
+                    
                 }else{
                     requestCadastro();
                 }
@@ -297,7 +303,7 @@
                     <br>        
                         <div class="form-group">
                             <button @click="cadastrarAgendamento" class="btn btn-primary"
-                            :disabled="(!this.clientesDataSourceSelect || (this.servicosQuantidade==0) )"
+                            :disabled="(!this.clientesDataSourceSelect || (this.servicosQuantidade==0) || this.iniciarTransacao )"
                             >Cadastrar cliente</button>
                         </div>
                     <br>

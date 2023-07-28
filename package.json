@@ -27,10 +27,12 @@
         "vue-loader": "^17.0.1"
     },
     "dependencies": {
+        "chart.js": "^4.3.2",
         "lodash": "^4.17.21",
         "moment": "^2.29.4",
         "moment-timezone": "^0.5.43",
         "vue": "^3.2.36",
+        "vue-chartjs": "^5.2.0",
         "vue-loader": "^17.0.0",
         "vue-resizable": "^2.1.7",
         "vuedraggable": "^4.1.0"

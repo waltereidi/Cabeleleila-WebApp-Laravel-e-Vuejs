@@ -96,7 +96,8 @@ export default {
 
 <template>
         <div class="input-group">
-            <button class="btn btn-link" @click="paginaAnterior" >&lt</button>&nbsp<button type="button" class="btn btn-light">{{ inicio }} - {{ inicio+50 }}</button>&nbsp
+            <button class="btn btn-link" @click="paginaAnterior" >&lt</button>&nbsp<button type="button" 
+            class="btn btn-light">{{ inicio }} - {{ inicio+50 }}</button>&nbsp
             <select class="custom-select" v-model="select" >
                 <option value="Nome"  selected>Nome</option>
                 <option value="Id" >Id</option>

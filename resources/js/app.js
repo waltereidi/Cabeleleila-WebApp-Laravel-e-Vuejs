@@ -11,6 +11,8 @@ import Agendamentos from "./components/Agendamentos/agendamentos.vue";
 
 import EditarAgendamentos from "./components/Agendamentos/editarAgendamentos.vue";
 
+import Gerenciamentos from "./components/Gerenciamento/gerenciamento.vue";
+
 const appClientes =  createApp();
 appClientes.component('vue-clientes' , Clientes ).component('vue-tablerow' , Tablerow );
 appClientes.mount("#vueClientes");

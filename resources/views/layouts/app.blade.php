@@ -65,9 +65,10 @@
       @endif
     </div>
   </nav>
+    <div style="min-height:550px">
 
         @yield('content')
-
+    </div>
  
 {{-- Footer --}}
 <section id="footer">
@@ -90,8 +91,8 @@
             
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-12 mt-2 mt-sm-2 text-center text-white">
-                <p><u><a href="javascript:void();">Mande um email para walter-eidi@hotmail.com</a></u> indicando livros, preferencialmente história do planeta, tecnologia ,invenções e pessoas icônicas </p>
-                <p class="h6">Enfeitar com esperança a sede de saber.<a class="text-green ml-2" href="https://www.sunlimetech.com" target="_blank"></a></p>
+                <p><u><a href="javascript:void();">Mande um email para walter-eidi@hotmail.com</a></u>Prova de desenvolvimento para a empresa DSIN Tecnologia da informação </p>
+                <p class="h6">Cabeleleila app.<a class="text-green ml-2" href="https://www.sunlimetech.com" target="_blank"></a></p>
             
             </div>
             </hr>
