@@ -19,9 +19,9 @@ export default {
             this.debouncedInput = setTimeout(() => {
                     
                 if(this.busca === ''){
-                    axios.get('api/servicos/getServicos').then(response => (this.dataSource = response.data));      
+                    axios.get('/api/servicos/getServicos').then(response => (this.dataSource = response.data));      
                 }else{
-                    axios.get('api/servicos/getBuscaServicos?coluna='+this.select+'&busca='+this.busca).then(response => ( this.dataSource = response.data ));
+                    axios.get('/api/servicos/getBuscaServicos?coluna='+this.select+'&busca='+this.busca).then(response => ( this.dataSource = response.data ));
                     console.log(this.dataSource);
                 }
             }, 250);
@@ -32,12 +32,12 @@ export default {
                 if(this.inicio < 50 ){
                     this.inicio = 0 ;
                 }
-                axios.get('api/servicos/getServicosPaginacao?inicio='+this.inicio).then(response => (this.dataSource = response.data));
+                axios.get('/api/servicos/getServicosPaginacao?inicio='+this.inicio).then(response => (this.dataSource = response.data));
             }
         },
         paginaSeguinte(){
             this.inicio = this.inicio+50; 
-            axios.get('api/servicos/getServicosPaginacao?inicio='+this.inicio).then(response => (this.dataSource = response.data));
+            axios.get('/api/servicos/getServicosPaginacao?inicio='+this.inicio).then(response => (this.dataSource = response.data));
         },
         editarLinha(id){
             const editar = document.getElementById('editarLinha'+id);
@@ -49,7 +49,7 @@ export default {
         }, 
         deletar(id){
             if(window.confirm('Deseja realmente deletar a linha de id '+id+' ?')){
-                const requisicao = axios.delete('api/servicos/deleteServicos/'+id);
+                const requisicao = axios.delete('/api/servicos/deleteServicos/'+id);
                 console.log(requisicao);
                 for (let i = 0; i < this.dataSource.length; i++) {
                     if (this.dataSource[i].id === id) {
@@ -70,15 +70,15 @@ export default {
                    tempoestimado : this.$refs[inputs[4]][0].value 
                };
                
-               const request = axios.post('api/servicos/modificarServicos' , data );
+               const request = axios.post('/api/servicos/modificarServicos' , data );
                
-               axios.get('api/servicos/getServicos').then(response => (this.dataSource = response.data));
+               axios.get('/api/servicos/getServicos').then(response => (this.dataSource = response.data));
            }
         }
         
   },
     mounted() {
-        axios.get('api/servicos/getServicos').then(response => (this.dataSource = response.data));
+        axios.get('/api/servicos/getServicos').then(response => (this.dataSource = response.data));
         
 
     },

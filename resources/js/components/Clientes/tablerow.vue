@@ -19,9 +19,9 @@ export default {
             this.debouncedInput = setTimeout(() => {
                     
                 if(this.busca == ''){
-                    axios.get('api/clientes/getClientes').then(response => (this.dataSource = response.data));      
+                    axios.get('/api/clientes/getClientes').then(response => (this.dataSource = response.data));      
                 }else{
-                    axios.get('api/clientes/getBuscaClientes?coluna='+this.select+'&busca='+this.busca).then(response => ( this.dataSource = response.data ));
+                    axios.get('/api/clientes/getBuscaClientes?coluna='+this.select+'&busca='+this.busca).then(response => ( this.dataSource = response.data ));
                 }
             }, 250);
         },
@@ -31,12 +31,12 @@ export default {
                 if(this.inicio < 50 ){
                     this.inicio = 0 ;
                 }
-                axios.get('api/clientes/getClientesPaginacao?inicio='+this.inicio).then(response => (this.dataSource = response.data));
+                axios.get('/api/clientes/getClientesPaginacao?inicio='+this.inicio).then(response => (this.dataSource = response.data));
             }
         },
         paginaSeguinte(){
             this.inicio = this.inicio+50; 
-            axios.get('api/clientes/getClientesPaginacao?inicio='+this.inicio).then(response => (this.dataSource = response.data));
+            axios.get('/api/clientes/getClientesPaginacao?inicio='+this.inicio).then(response => (this.dataSource = response.data));
         },
         editarLinha(id){
             const editar = document.getElementById('editarLinha'+id);
@@ -48,7 +48,7 @@ export default {
         }, 
         deletar(id){
             if(window.confirm('Deseja realmente deletar a linha de id '+id+' ?')){
-                const requisicao = axios.delete('api/clientes/deleteClientes/'+id);
+                const requisicao = axios.delete('/api/clientes/deleteClientes/'+id);
                 
                 for (let i = 0; i < this.dataSource.length; i++) {
                     if (this.dataSource[i].id === id) {
@@ -73,9 +73,9 @@ export default {
                    datanascimento : this.$refs[inputs[8]][0].value 
                };
                console.log( data );
-               const request = axios.post('api/clientes/modificarClientes' , data );
+               const request = axios.post('/api/clientes/modificarClientes' , data );
                console.log(request);
-               axios.get('api/clientes/getClientes').then(response => (this.dataSource = response.data));
+               axios.get('/api/clientes/getClientes').then(response => (this.dataSource = response.data));
            }
         }
         

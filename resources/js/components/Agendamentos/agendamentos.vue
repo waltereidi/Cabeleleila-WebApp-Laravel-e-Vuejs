@@ -1,6 +1,7 @@
 <script>
     import axios from 'axios';
     import _ from 'lodash';
+    import moment from 'moment' ; 
     export default {
     props : ['email'] , 
     data() {
@@ -129,7 +130,7 @@
         let dados = {
         "clientes_id" : clientes_id ,
         "dataagendamento" : this.dataAgendamento  };
-        console.log(JSON.stringify(dados));
+
         let dadosCadastro = {
                      "servicos" : this.servicosSelecionadosDataSource ,
                      "clientes_id" : clientes_id ,
@@ -142,7 +143,7 @@
                 };
         
         let requestCadastro = function(){
-            axios.post('api/agendamentos/cadastrarAgendamentos' , dadosCadastro ).then( retornoCadastro =>{
+            axios.post('/api/agendamentos/cadastrarAgendamentos' , dadosCadastro ).then( retornoCadastro =>{
                     if(retornoCadastro.data=='OK'){
                         window.location.href=('/agendamentos');
                     }else{
@@ -151,7 +152,7 @@
                 });
         }
 
-         axios.post('api/agendamentos/getAgendamentosSemana' , dados).then(retorno =>{ 
+         axios.post('/api/agendamentos/getAgendamentosSemana' , dados).then(retorno =>{ 
           if( retorno.data[0] == 'OK'){  
 
             requestCadastro();
@@ -177,13 +178,13 @@
     },
     
     mounted(){
-        const dataAtual = moment.utc();
+                const dataAtual = moment.utc();
                 const dataSaoPaulo = dataAtual.tz('America/Sao_Paulo');
                 const dataFormatada = dataSaoPaulo.format('YYYY-MM-DDTHH:mm');
                 this.dataAgendamento = dataFormatada;
 
                 axios.get('/api/agendamentos/getClientes').then(response => this.clientesDataSource = response.data);
-                axios.get('api/agendamentos/getServicos').then(response => this.servicosDataSource = response.data);
+                axios.get('/api/agendamentos/getServicos').then(response => this.servicosDataSource = response.data);
     },
     
   }
@@ -237,7 +238,7 @@
                         <div class="form-group col-md-9">
                             <select class="form-select" v-model="servicosDataSourceSelect" >
                                 <option v-for=" servicos in servicosDataSource " :ref="'servicos_id'+servicos.id" :value="servicos.id" >
-                                     {{ servicos.nome }} R${{ servicos.preco }}, duração {{ servicos.tempoestimado.substr(0,5)  }} </option>
+                                     {{ servicos.nome }} R${{ servicos.preco }}, duração {{ servicos.tempoestimado.substring(0,5)  }} </option>
                             </select>                 
                         </div>
                     <div class="form-group col-md-3">

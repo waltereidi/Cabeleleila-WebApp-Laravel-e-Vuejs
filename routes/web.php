@@ -59,7 +59,9 @@ Route::get('/clientes' , [ ClientesController::class , 'index' ]);
 Route::post('/clientes/cadastrarClientes' , [ClientesController::class , 'cadastrarClientes']); 
 
 //EditarAgendamentos 
-Route::get('/editarAgendamentos/{id}' , [AgendamentosController::class , 'editarAgendamentos']);
+Route::get('/editarAgendamentos/{id}' ,function(){
+      return view('editarAgendamentos');
+});
 
 //Rota Default
 Route::fallback(function () {

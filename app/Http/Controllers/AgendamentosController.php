@@ -134,10 +134,99 @@ class AgendamentosController extends Controller
 
     }
 
+    public function editarAgendamentos(Request $request ){
+        $regras = [
+            'servicos' => 'required',
+            'clientes_id' => 'required' ,
+            'dataagendamento' => 'required|date', 
+            'descricao' =>'max:255' ,
+            'observacao' => 'max:255' ,
+            'desconto' => 'decimal:2' , 
+            'acrescimo' => 'decimal:2', 
+            'email' => 'required',
+            'situacaoagendamento'=>'required', 
+            'id' => 'required',
+        ];
+        $mensagems= [
+            'servicos.required'=> 'Deve haver ao menos um servico cadastrado ',
+            'clientes_id.required' => 'Deve haver ao menos um cliente cadastrado',
+            'dataagendamento.required' => 'A data deve estar preenchida' , 
+            'dataagendamento.date' => 'formato de data inválido' ,
+            'descricao.max:255' => 'A descricao deve conter até 255 caracteres', 
+            'observacao.max:255' => 'A observacao deve conter até 255 caracteres', 
+            'desconto.decimal:2' => 'O desconto deve ser do tipo numérico com no máximo duas casas decimais ex: 00.00 ' , 
+            'acrescimo.decimal:2' => 'O desconto deve ser do tipo numérico com no máximo duas casas decimais ex: 00.00' ,
+            'email.required' => 'O email é obrigatório',
+            'situacaoagendamento.required' => 'A situação do agendamento é obrigatória' , 
+            'id' => 'Id não está sendo enviado na requisição!',
+        ];
+        $dados =[ 
+            'servicos' => $request->servicos , 
+            'clientes_id' => $request->clientes_id , 
+            'dataagendamento' => $request->dataagendamento , 
+            'descricao' => $request->descricao , 
+            'observacao' => $request->observacao , 
+            'desconto' => $request->desconto , 
+            'acrescimo' => $request->acrescimo ,
+            'email' => $request->email ,
+            'situacaoagendamento' => $request->situacaoagendamento ,
+            'id' => $request->id,
+        ];
+        $validar = Validator::make( $dados , $regras , $mensagems);
+        
+        if($validar->fails()){
+            return response()->json($validar->errors());            
+
+        }else{
+            
+            DB::beginTransaction();
+           
+
+            try{
+                $usuario =Usuarios::where('email' ,'=', $request->email )->select('id')->first();
+                $dados =[
+                    'clientes_id' => $request->clientes_id ,
+                        'dataagendamento' => $request->dataagendamento , 
+                        'descricao' => $request->descricao , 
+                        'observacao' => $request->observacao , 
+                        'desconto' => $request->desconto , 
+                        'acrescimo' => $request->acrescimo , 
+                        'situacaoagendamento' => $request->situacaoagendamento , 
+                        'usuarios_id' => $usuario['id'],
+                        'updated_at' => Carbon::now() ,
+                        'datatermino' => $request->datatermino ,
+                        
+                    ];
+                $agendamento = Agendamentos::find($request->id);
+                $agendamento->update($dados); 
+                
+                $agendamentoServicos = AgendamentoServicos::where('agendamentos_id' , $request->id ); 
+                $agendamentoServicos->delete(); 
+
+                foreach($request->servicos as $servico ){
+                    AgendamentoServicos::create([
+                        'created_at' => Carbon::now() , 
+                        'servicos_id' => $servico['id'] , 
+                        'agendamentos_id' => $agendamento->id
+                    ]);
+                }
+
+            }catch(\Exception $e ){
+                return $e;
+                DB::rollBack();
+                
+            }
+            DB::commit();
+            return response()->json('OK');
+        }
+
+    }
+
     public function deletarAgendamento($id) {
         
         $agendamento = Agendamentos::find($id);
         if($agendamento ){
+            
             $agendamentoServicos = agendamentoServicos::where('agendamentos_id' , $id) ;
             if($agendamentoServicos){
                 $agendamentoServicos->delete();
@@ -151,115 +240,34 @@ class AgendamentosController extends Controller
     }
 
     public function getAgendamentos() {
-        $dbrawCasesituacao = "case agendamentos.situacaoagendamento ".
-            "when 1 then  'Ativo' ".
-            "when 2 then 'Em andamento' ".
-            "when 9 then 'Finalizado' ".
-            "when 10 then 'Cancelado' ".            
-            "end as situacao ";
-
-
-        $agendamentos =DB::table('agendamentos')
-            ->join('clientes' , 'clientes.id' , '=' ,  'agendamentos.clientes_id') 
-            ->join('usuarios' , 'usuarios.id' , '=' , 'agendamentos.usuarios_id') 
-            ->join('agendamentoservicos' , 'agendamentoservicos.agendamentos_id' , '=' , 'agendamentos.id' )
-            ->join('servicos' , 'servicos.id' , '=' , 'agendamentoservicos.servicos_id')
-            ->distinct('agendamentoservicos.agendamentos_id')
-            ->select('agendamentos.id', 'agendamentos.descricao' , 
-            DB::raw($dbrawCasesituacao) , 'usuarios.nome as usuariosnome' ,'clientes.nome as clientesnome' ,
-            DB::raw('SUM(servicos.preco) over(partition by agendamentos.id) as preco ') )
-            ->limit(50)->get();
-
-            return $agendamentos;
+        $agendamentos = new Agendamentos();    
+        return $agendamentos->getAgendamentos();
 
     }
     public function getAgendamentosPaginacao(Request $request){
-        $parametros = $request->all(); 
-        $dbrawCasesituacao = "case agendamentos.situacaoagendamento ".
-            "when 1 then  'Ativo' ".
-            "when 2 then 'Em andamento' ".
-            "when 9 then 'Finalizado' ".
-            "when 10 then 'Cancelado' ".            
-            "end as situacao ";
-
-        $agendamentos =DB::table('agendamentos')
-            ->join('clientes' , 'clientes.id' , '=' ,  'agendamentos.clientes_id') 
-            ->join('usuarios' , 'usuarios.id' , '=' , 'agendamentos.usuarios_id') 
-            ->join('agendamentoservicos' , 'agendamentoservicos.agendamentos_id' , '=' , 'agendamentos.id' )
-            ->join('servicos' , 'servicos.id' , '=' , 'agendamentoservicos.servicos_id')
-            ->distinct('agendamentoservicos.agendamentos_id')
-            ->select('agendamentos.id', 'agendamentos.descricao' , 
-            DB::raw($dbrawCasesituacao) , 'usuarios.nome as usuariosnome' ,'clientes.nome as clientesnome' ,
-            DB::raw('SUM(servicos.preco) over(partition by agendamentos.id) as preco ') )
-            ->skip($parametros['inicio'])->limit(50)->get();
-
-            return $agendamentos;
+        $agendamentos = new Agendamentos();
+        return $agendamentos->getAgendamentosPaginacao( $request->all());
+    
     }
-    public function getTipoSituacao(string $situacao){
-        switch(strtolower($situacao)){
-            case 'ativo' : return 1 ;break ;
-            case 'em andamento' : return 2 ;break ; 
-            case 'finalizado' : return 9 ;break ; 
-            case 'cancelado' :return 10 ;break ; 
-            default : return null ;break ;
-        }
-    }
+  
 
     public function getBuscaAgendamentos(Request $request){
-        $parametros = $request->all(); 
+        $agendamentos = new Agendamentos();
+        return $agendamentos->getBuscaAgendamentos($request->all());
 
-        $dbrawCasesituacao = "case agendamentos.situacaoagendamento ".
-            "when 1 then  'Ativo' ".
-            "when 2 then 'Em andamento' ".
-            "when 9 then 'Finalizado' ".
-            "when 10 then 'Cancelado' ".           
-            "end as situacao ";
-        
-        $busca = $parametros['busca'];
+    }
+   
+    public function getEditarAgendamentos( $id ) {
+        $agendamento = Agendamentos::select('id','clientes_id' , 'dataagendamento' , 'descricao' , 'observacao' ,
+         'desconto' , 'acrescimo' , 'situacaoagendamento' , 'usuarios_id' ,DB::raw("DATE_PART('day', AGE(NOW(), dataagendamento)) as dias"),
+         'datatermino')
+        ->where('id' , $id)->first();
 
-        switch(strtolower($parametros['coluna']) ){
-            case 'descricao' : $query = "where descricao ilike '%{$busca}%'";  break;
-            case 'id' : $query = "where id = '{$busca}'" ;  break;
-            case 'preco' : $query = "where preco = '{$busca}'"; break;
-            case 'dataagendamento' : $query = "where dataagendamento = '{$busca}'";  break;
-            case 'situacaoagendamento' : $query = "where situaca = '{getBuscaAgendamentos($busca)}'"; break;
-            case 'clientes_id' : $query = "where clientesnome ilike '%{$busca}%'";  break;
-            case 'usuarios_id' : $query = "where usuariosnome ilike '%{$busca}%'";  break;
-            default : null ;
-        };
-        
-        $agendamentos = DB::select(
-                <<<SQL
-                with getAgendamentos as (
-                select 
-                distinct 
-                a.id as id , a.descricao as descricao , a.dataagendamento  as dataagendamento  , 
-                case a.situacaoagendamento 
-                when 1 then 'Ativo' 
-                when 2 then 'Em andamento' 
-                when 9 then 'Finalizado' 
-                when 10 then 'Cancelado' end as situacao , 
-                u.nome as usuariosnome , 
-                cl.nome as clientesnome , 
-                sum(s.preco) over ( partition by a.id ) as preco
-                from public.agendamentos a 
-                join public.clientes cl on cl.id = a.clientes_id  
-                join public.usuarios u  on u.id = a.usuarios_id  
-                join public.agendamentoservicos ags on ags.agendamentos_id  = a.id  
-                join public.servicos s  on s.id  = ags.servicos_id 
-                )
-                select * from getAgendamentos
-                {$query}
-                SQL);
-                return $agendamentos;
+        $agendamento->servicos = AgendamentoServicos::select('id' ,'servicos_id')->where('agendamentos_id' , $id)->get() ; 
+
+        return $agendamento;
 
     }
 
-    public function editarAgendamentos(Request $request ){
-
-        return view('editarAgendamentos');
-
-
-    }
-
+    
 }

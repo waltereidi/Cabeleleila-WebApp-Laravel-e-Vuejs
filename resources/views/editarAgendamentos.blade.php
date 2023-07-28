@@ -8,6 +8,11 @@
 @endsection
 
 
+  
+
+@section('content')
+
+
 <div id="vueEditarAgendamentos">
     <div class="row">
       <div class="col-1 sm-1"></div>
@@ -18,7 +23,7 @@
   
           
               @csrf
-              <vue-editaragendamentos email="{{ session()->get('email') }}"> </vue-editaragendamentos>
+              <vue-editaragendamentos email="{{ session()->get('email') }}" editarAgendamentosId="{{  request('id') }}" tipousuario="{{session()->get('tipousuario')}}"> </vue-editaragendamentos>
               @if (session('mensagem'))
                 <div class="alert alert-danger">
                     {{ session('mensagem') }}
@@ -30,10 +35,5 @@
       </div>
     </div>
   </div>
-  
-
-@section('content')
-
-
 @endsection
 

@@ -1,8 +1,10 @@
 <script>
     import axios from 'axios';
     import _ from 'lodash';
+    import moment from 'moment-timezone';
+import { stringify } from 'postcss';
     export default {
-    props : ['email'] , 
+    props : ['email' , 'editaragendamentosid' , 'tipousuario'] , 
     data() {
         return {
             abrirModal : false ,
@@ -12,7 +14,9 @@
             servicosPreco : 0.00 , 
             servicosTempo :'00:00',
             servicoSelecionado : null ,
+            dias : 0 ,
 
+            situacaoAgendamentos : 0 ,
             servicosSelecionadosDataSource : [] ,
             clientesDataSourceSelect : null ,
             descricao :"", 
@@ -20,6 +24,7 @@
             acrescimo : '0.00' ,
             dataAgendamento :'' , 
             observacao : '' , 
+            dataTermino : null ,
         }
     }, 
     methods:{
@@ -116,15 +121,75 @@
             }
             
     },
+    
+    editarAgendamento(){
+        let clientes_id =this.clientesDataSourceSelect.replace('clientes_id' , '') ;
+        let dados = {
+        "clientes_id" : clientes_id ,
+        "dataagendamento" : this.dataAgendamento  };
+
+        let dadosCadastro = {
+                     "servicos" : this.servicosSelecionadosDataSource ,
+                     "clientes_id" : clientes_id ,
+                     "descricao" : this.descricao ,
+                     "desconto" : this.desconto ,
+                     "acrescimo" : this.acrescimo ,
+                     "dataagendamento" : this.dataAgendamento ,
+                     "observacao" : this.observacao ,
+                     "situacaoagendamento" : this.situacaoAgendamentos,
+                     "datatermino" :  this.dataTermino , 
+                     "email" : this.email ,
+                     "id" : this.editaragendamentosid , 
+                };
+        console.log(JSON.stringify(dadosCadastro));
+            axios.post('/api/agendamentos/editarAgendamentos' , dadosCadastro ).then( retornoCadastro =>{
+                    if(retornoCadastro.data=='OK'){
+                        window.location.href=('/agendamentos');
+                    }else{
+                        alert(retornoCadastro.data);
+                    }
+                });
+    }
+
     },
     mounted(){
         const dataAtual = moment.utc();
                 const dataSaoPaulo = dataAtual.tz('America/Sao_Paulo');
                 const dataFormatada = dataSaoPaulo.format('YYYY-MM-DDTHH:mm');
                 this.dataAgendamento = dataFormatada;
-
+                
                 axios.get('/api/agendamentos/getClientes').then(response => this.clientesDataSource = response.data);
-                axios.get('api/agendamentos/getServicos').then(response => this.servicosDataSource = response.data);
+                axios.get('/api/agendamentos/getServicos').then(resources => {
+                     this.servicosDataSource = resources.data;
+                     axios.get('/api/agendamentos/getEditarAgendamentos/'+this.editaragendamentosid ).then(response =>{
+                     this.descricao = response.data.descricao;
+                     this.desconto = response.data.desconto; 
+                     this.acrescimo = response.data.acrescimo;
+                     this.dataAgendamento = response.data.dataagendamento;
+                     this.observacao = response.data.observacao;
+                     this.situacaoAgendamentos = response.data.situacaoagendamento ;
+                     this.clientesDataSourceSelect = 'clientes_id'+response.data.clientes_id ;
+                     this.dias = response.data.dias ; 
+                     this.dataTermino = response.data.datatermino ; 
+                     let dataSource = resources.data ; 
+                     let servicos = response.data.servicos;
+                     let servicosSelecionados =[];
+                     var self = this ; 
+                     _.forEach( servicos , function(value) {
+                         _.forEach( dataSource , function(servico){
+                            if(value.servicos_id === servico.id ){
+                                servicosSelecionados.push(servico);
+                                self.servicosDataSourceSelect =value.servicos_id ;
+                                self.adicionarServico();
+                                }
+                         } ) 
+                    });
+                     this.servicosSelecionadosDataSource = servicosSelecionados;
+                });
+                
+                });
+                    
+
     },
     
   }
@@ -148,24 +213,25 @@
     }
 
 </style>
-<template>
+<template>      
+                
                  <fieldset>
                       <legend >Cadastrar novo agendamento</legend>
                     <div >
                     <div class="row">
                         <div class="form-group col-md-12">
                             <label >Descricao</label>
-                            <input type="text" class="form-control form-control-sm" v-model="descricao" maxlength="60" placeholder="Descrição do agendamento">
+                            <input :disabled="this.dias<2 && this.tipousuario != 1" type="text" class="form-control form-control-sm" v-model="descricao" maxlength="60" placeholder="Descrição do agendamento">
                         </div>
                         <div class="form-group col-md-6">
                             <label >Data do agendamento</label>
-                            <input type="datetime-local" class="form-control form-control-sm" v-model="dataAgendamento" :min="dataAgendamento" name="dataagendamento">
+                            <input :disabled="this.dias<2 && this.tipousuario != 1" type="datetime-local" class="form-control form-control-sm" v-model="dataAgendamento" :min="dataAgendamento" name="dataagendamento">
                         </div>                        
                     </div>
                     <br>
                     <div class="row">
                         <div class="form-group col-md-12">
-                            <select class="form-select"  v-model="clientesDataSourceSelect">
+                            <select :disabled="true" class="form-select"  v-model="clientesDataSourceSelect">
                                 <option v-for=" clientes in clientesDataSource " :id="'clientes_id'+clientes.id" :value="'clientes_id'+clientes.id" >
                                     {{ clientes.nome }} {{ clientes.telefone }}</option>
 
@@ -176,13 +242,13 @@
                     <br>
                     <div class="row">
                         <div class="form-group col-md-9">
-                            <select class="form-select" v-model="servicosDataSourceSelect" >
+                            <select :disabled="this.dias<2 && this.tipousuario != 1" class="form-select" v-model="servicosDataSourceSelect" >
                                 <option v-for=" servicos in servicosDataSource " :ref="'servicos_id'+servicos.id" :value="servicos.id" >
-                                     {{ servicos.nome }} R${{ servicos.preco }}, duração {{ servicos.tempoestimado.substr(0,5)  }} </option>
+                                     {{ servicos.nome }} R${{ servicos.preco }}, duração {{ servicos.tempoestimado }} </option>
                             </select>                 
                         </div>
                     <div class="form-group col-md-3">
-                        <button class="btn btn-success btn-sm" @click="adicionarServico" >Incluir</button>
+                        <button :disabled="this.dias<2 && this.tipousuario != 1" class="btn btn-success btn-sm" @click="adicionarServico" >Incluir</button>
                     </div>
                     </div>
                     <br>
@@ -199,7 +265,7 @@
                                         <td>{{ servicos.id }}</td>
                                         <td>{{ servicos.nome }}</td>
                                         <td>{{ servicos.preco}}</td>
-                                        <td>{{ servicos.tempoestimado.substring( 0 ,5) }}</td> 
+                                        <td>{{ servicos.tempoestimado }}</td> 
                                         
                                         </tr>
                                 </tbody>
@@ -212,7 +278,7 @@
                             </table>
                         </div> 
                         <div class="form-group col-md-3">
-                            <button class="btn btn-danger btn-sm" @click="removerServico" >Remover</button>
+                            <button :disabled="this.dias<2 && this.tipousuario != 1" class="btn btn-danger btn-sm" @click="removerServico" >Remover</button>
                         </div>
                     </div>
                     
@@ -220,26 +286,52 @@
                     <div class="row">
                         <div class="form-group col-md-6">
                             <label >Desconto R$</label>
-                            <input type="number" step="0.01" class="form-control form-control-sm" v-model="desconto">
+                            <input :disabled="this.dias<2 && this.tipousuario != 1" type="number" step="0.01" class="form-control form-control-sm" v-model="desconto">
                         </div>
                         <div class="form-group col-md-6">
                             <label >Acrescimo R$</label>
-                            <input type="number" step="0.01" class="form-control form-control-sm" v-model="acrescimo">
+                            <input :disabled="this.dias<2 && this.tipousuario != 1" type="number" step="0.01" class="form-control form-control-sm" v-model="acrescimo">
                         </div>
                     </div>
                    
                     <div class="row">
                         <div class="form-group">
                             <label >Observação</label>
-                            <textarea class="form-control" v-model="observacao" rows="3" maxlength="255"></textarea>
+                            <textarea :disabled="this.dias<2 && this.tipousuario != 1" class="form-control" v-model="observacao" rows="3" maxlength="255"></textarea>
                         </div>
                     </div>
+                    <br>
+                    
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            <label >Situação do agendamento</label>
+                            <select v-model="situacaoAgendamentos" :disabled="this.dias<2 && this.tipousuario != 1" class="form-select" >
+                                <option value="1"> Ativo </option>
+                                <option value="2"> Em andamento </option>
+                                <option value="9"> Finalizado </option>
+                                <option value="10"> Cancelado </option>
+                            </select>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label >Data de encerramento do agendamento</label>
+                            <input :disabled="this.dias<2 && this.tipousuario != 1" type="datetime-local" class="form-control form-control" v-model="dataTermino" :min="dataAgendamento" >
+                        </div> 
+                    </div>
+
                     <br>        
                         <div class="form-group">
-                            <button @click="cadastrarAgendamento" class="btn btn-primary"
-                            :disabled="(!this.clientesDataSourceSelect || (this.servicosQuantidade==0) )"
-                            >Cadastrar cliente</button>
+                            <button @click="editarAgendamento" class="btn btn-warning"
+                            :disabled="( (this.servicosQuantidade==0 ))"
+                            v-show ="this.dias>=2 || this.tipousuario == 1"
+                            >Enviar modificações</button>
                         </div>
+                        <br>
+                        <div v-show="this.dias<2" class="alert alert-danger" role="alert">
+                        Apenas o gerente pode alterar o agendamento quando a quantidade dias <br>
+                        para a data do agendamento for menor que 2.<br>
+                        intervalo atual : {{ this.dias }} dias.
+                        </div>
+                        
                     <br>
                 </div>
             </fieldset>   

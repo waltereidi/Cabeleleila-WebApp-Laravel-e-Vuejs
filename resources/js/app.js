@@ -28,3 +28,9 @@ const appEditarAgendamentos = createApp();
 
 appEditarAgendamentos.component('vue-editaragendamentos' , EditarAgendamentos ) ; 
 appEditarAgendamentos.mount('#vueEditarAgendamentos');
+
+
+const appGerenciamentos = createApp();
+
+appGerenciamentos.component('vue-gerenciamentos' , Gerenciamentos); 
+appGerenciamentos.mount('#vueGerenciamentos');
