@@ -8,7 +8,9 @@ export default {
             dataSource : [],
             select : 'Nome' ,
             busca : '' ,
-            inicio : 0 
+            inicio : 0 , 
+            dataInicio : null , 
+            dataFim : null , 
         }
     }, 
     methods: {
@@ -20,12 +22,23 @@ export default {
             this.debouncedInput = setTimeout(() => {
                     
                 if(this.busca === ''){
-                    axios.get('api/agendamentos/getAgendamentos').then(response => (this.dataSource = response.data));      
+                    axios.get('/api/agendamentos/getAgendamentos').then(response => (this.dataSource = response.data));      
                 }else{
-                    axios.get('api/agendamentos/getBuscaAgendamentos?coluna='+this.select+'&busca='+this.busca).then(response => ( this.dataSource = response.data ));
+                    axios.get('/api/agendamentos/getBuscaAgendamentos?coluna='+this.select+'&busca='+this.busca).then(response => ( this.dataSource = response.data ));
                     //console.log(this.dataSource);
                 }
             }, 250);
+        },
+        getBuscasIntervalo(){
+            
+            let dados ={
+                inicio : this.dataInicio , 
+                fim : this.dataFim 
+            };
+            console.log(dados);
+            axios.post('/api/agendamentos/getBuscaIntervaloAgendamentos' , dados).then(response => (this.dataSource = response.data )); 
+
+
         },
         paginaAnterior(){
             if(this.inicio > 0 ){
@@ -33,12 +46,12 @@ export default {
                 if(this.inicio < 50 ){
                     this.inicio = 0 ;
                 }
-                axios.get('api/agendamentos/getAgendamentosPaginacao?inicio='+this.inicio).then(response => (this.dataSource = response.data));
+                axios.get('/api/agendamentos/getAgendamentosPaginacao?inicio='+this.inicio).then(response => (this.dataSource = response.data));
             }
         },
         paginaSeguinte(){
             this.inicio = this.inicio+50; 
-            axios.get('api/agendamentos/getAgendamentosPaginacao?inicio='+this.inicio).then(response => (this.dataSource = response.data));
+            axios.get('/api/agendamentos/getAgendamentosPaginacao?inicio='+this.inicio).then(response => (this.dataSource = response.data));
         },
         editarLinha(id){
             const editar = document.getElementById('editarLinha'+id);
@@ -50,7 +63,7 @@ export default {
         }, 
         deletar(id){
             if(window.confirm('Deseja realmente deletar a linha de id '+id+' ?')){
-                const requisicao = axios.delete('api/agendamentos/deleteAgendamentos/'+id);
+                const requisicao = axios.delete('/api/agendamentos/deleteAgendamentos/'+id);
                 //console.log(requisicao);
                 for (let i = 0; i < this.dataSource.length; i++) {
                     if (this.dataSource[i].id === id) {
@@ -65,7 +78,7 @@ export default {
         }
   },
     mounted() {
-        axios.get('api/agendamentos/getAgendamentos').then(response => (this.dataSource = response.data));
+        axios.get('/api/agendamentos/getAgendamentos').then(response => (this.dataSource = response.data));
         
 
     },
@@ -92,8 +105,18 @@ export default {
                 <option value="clientes_id" >Nome do cliente</option>
                 <option value="Usuarios_id" >Usuário Responsável</option>
             </select>
-          <input type="text" class="form-control" aria-label="Text input with dropdown button"
-          v-model="busca" @input="getBuscas">
+
+            <input type="text" class="form-control" aria-label="Text input with dropdown button"
+            v-model="busca" @input="getBuscas" v-show="select != 'dataagendamento'">
+          
+            <label v-show="select == 'dataagendamento'">Datainicio
+            <input v-show="select == 'dataagendamento'" type="datetime-local" class="form-control form-control-sm" 
+            v-on:change="getBuscasIntervalo" v-model="dataInicio"  ></label>
+            
+            <label v-show="select == 'dataagendamento'">Data fim
+            <input v-show="select == 'dataagendamento'" type="datetime-local" class="form-control form-control-sm" 
+            v-model="dataFim" v-on:change="getBuscasIntervalo" ></label>
+                        
           <button class="btn btn-link" @click="paginaSeguinte">&gt</button>
         </div>
 

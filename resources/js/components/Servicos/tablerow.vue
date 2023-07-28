@@ -102,8 +102,6 @@ export default {
                 <option value="Preco" >Preço</option>
                 <option value="Descricao" >Descrição</option>
                 <option value="Tempoestimado" >Tempo estimado</option>
-                <option value="Ultima alteracao">Última alteração</option>
-                <option value="Criado em" >Criado em</option>
             </select>
           <input type="text" class="form-control" aria-label="Text input with dropdown button"
           v-model="busca" @input="getBuscas">

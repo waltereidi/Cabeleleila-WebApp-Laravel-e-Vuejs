@@ -111,6 +111,7 @@ Route::post('agendamentos/cadastrarAgendamentos',[ AgendamentosController::class
 Route::get('agendamentos/getAgendamentos' , [ AgendamentosController::class  , 'getAgendamentos'] ); 
 Route::get('agendamentos/getAgendamentosPaginacao' , [ AgendamentosController::class , 'getAgendamentosPaginacao']  );
 Route::get('agendamentos/getBuscaAgendamentos' , [ AgendamentosController::class  , 'getBuscaAgendamentos'] );
+Route::post('agendamentos/getBuscaIntervaloAgendamentos' , [ AgendamentosController::class , 'getBuscaIntervaloAgendamentos'] ) ;
 Route::get('agendamentos/getEditarAgendamentos/{id}' , [ AgendamentosController::class , 'getEditarAgendamentos']);
 Route::post('agendamentos/editarAgendamentos' , [AgendamentosController::class , 'editarAgendamentos']);
 

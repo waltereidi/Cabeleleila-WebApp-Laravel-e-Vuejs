@@ -33,7 +33,28 @@ return new class extends Migration
             'nome'=> 'Thomas. L Friedman',
             'email' => 'thomas@worldisflat.com',
             'telefone'=> '14997289932' 
-        ])
+        ],[
+            'nome'=> 'William Rosen',
+            'email' => 'William@amazon.com',
+            'telefone'=> '31 99240 2333' 
+        ],
+        [
+            'nome'=> 'Matthew Walker',
+            'email' => 'matthew@amazon.com',
+            'telefone'=> '80 99740 2593' 
+        ],
+        [
+            'nome'=> 'Yuval Harari',
+            'email' => 'yuval@amazon.com',
+            'telefone'=> '44 99040 8593' 
+        ], 
+        [
+            'nome'=> 'Joshua Foer',
+            'email' => 'Joshua@amazon.com',
+            'telefone'=> '92 98120 1048' 
+        ]
+    ),
+        
         );
     }
 

@@ -13,14 +13,13 @@ class Agendamentos extends Model
 
     public function getBuscaAgendamentos($parametros){
         
-       
-        $busca = $parametros['busca'];
+            $busca = $parametros['busca'];
+      
 
         switch(strtolower($parametros['coluna']) ){
             case 'descricao' : $query = "where descricao ilike '%{$busca}%'";  break;
             case 'id' : $query = "where id = '{$busca}'" ;  break;
             case 'preco' : $query = "where preco = '{$busca}'"; break;
-            case 'dataagendamento' : $query = "where dataagendamento = '{$busca}'";  break;
             case 'situacaoagendamento' : $query = "where lower(situacao) = '{$busca}'"; break;
             case 'clientes_id' : $query = "where clientesnome ilike '%{$busca}%'";  break;
             case 'usuarios_id' : $query = "where usuariosnome ilike '%{$busca}%'";  break;
@@ -52,6 +51,43 @@ class Agendamentos extends Model
                 SQL);
                 
 
+    }
+    public function getBuscaIntervaloAgendamentos( $parametros){
+        if($parametros['inicio'] != null && $parametros['fim'] != null ){
+            $query = "where date(dataagendamento) between '".$parametros['inicio']."' and '".$parametros['fim']."' " ;
+
+        }else{
+            if($parametros['inicio'] != null && $parametros['fim'] == null ){
+                $query ="where date(dataagendamento) = '".$parametros['inicio']."'";
+            }
+            if($parametros['fim'] != null && $parametros['inicio'] == null ){
+                $query = "where date(dataagendamento) = '".$parametros['fim']."'"; 
+            }
+        }
+
+        return DB::select(
+            <<<SQL
+            with getAgendamentos as (
+            select 
+            distinct 
+            a.id as id , a.descricao as descricao , a.dataagendamento  as dataagendamento  , 
+            case a.situacaoagendamento 
+            when 1 then 'Ativo' 
+            when 2 then 'Em andamento' 
+            when 9 then 'Finalizado' 
+            when 10 then 'Cancelado' end as situacao , 
+            u.nome as usuariosnome , 
+            cl.nome as clientesnome , 
+            sum(s.preco) over ( partition by a.id ) as preco
+            from public.agendamentos a 
+            join public.clientes cl on cl.id = a.clientes_id  
+            join public.usuarios u  on u.id = a.usuarios_id  
+            join public.agendamentoservicos ags on ags.agendamentos_id  = a.id  
+            join public.servicos s  on s.id  = ags.servicos_id 
+            )
+            select * from getAgendamentos 
+            {$query}
+            SQL);
     }
 
     public function getAgendamentosPaginacao($parametros){
@@ -91,7 +127,7 @@ class Agendamentos extends Model
             ->distinct('agendamentoservicos.agendamentos_id')
             ->select('agendamentos.id', 'agendamentos.descricao' , 
             DB::raw($dbrawCasesituacao) , 'usuarios.nome as usuariosnome' ,'clientes.nome as clientesnome' ,
-            DB::raw('SUM(servicos.preco) over(partition by agendamentos.id) as preco ') )
+            DB::raw('SUM(servicos.preco) over(partition by agendamentos.id) as preco ') , DB::RAW("to_char(agendamentos.dataagendamento , 'DD/MM/YYYY HH:mm') as dataagendamento") )
             ->limit(50)->get();
 
             return $agendamentos;

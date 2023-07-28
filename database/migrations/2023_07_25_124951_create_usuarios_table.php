@@ -33,6 +33,17 @@ return new class extends Migration
                 'nome' => 'Duck Dodgers' , 
                 'tipousuario' => 1 , 
                 'status'=> 1], 
+                ['email' => 'leila@cabeleleila.com.br',
+                'senha' => 'leila' , 
+                'nome' => 'Leila' , 
+                'tipousuario' => 1 , 
+                'status'=> 1], 
+                ['email' => 'nelson@cabeleleila.com.br',
+                'senha' => '123' , 
+                'nome' => 'Nelson ' , 
+                'tipousuario' => 0 , 
+                'status'=> 1], 
+
             )
 
         );

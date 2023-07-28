@@ -256,6 +256,22 @@ class AgendamentosController extends Controller
         return $agendamentos->getBuscaAgendamentos($request->all());
 
     }
+    public function getBuscaIntervaloAgendamentos(Request $request){
+        $agendamentos = new Agendamentos();
+        
+
+   
+         
+        $parametros = $request->all(); 
+        if($parametros['inicio'] == null &&  $parametros['fim'] == null ) {
+            return response()->json('Datas invalidas');
+        }else{
+            return $agendamentos->getBuscaIntervaloAgendamentos($parametros ); 
+        }
+
+        
+
+    }
    
     public function getEditarAgendamentos( $id ) {
         $agendamento = Agendamentos::select('id','clientes_id' , 'dataagendamento' , 'descricao' , 'observacao' ,

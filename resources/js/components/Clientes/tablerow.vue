@@ -72,9 +72,7 @@ export default {
                    observacao : this.$refs[inputs[7]][0].value , 
                    datanascimento : this.$refs[inputs[8]][0].value 
                };
-               console.log( data );
                const request = axios.post('/api/clientes/modificarClientes' , data );
-               console.log(request);
                axios.get('/api/clientes/getClientes').then(response => (this.dataSource = response.data));
            }
         }
@@ -108,9 +106,6 @@ export default {
                 <option value="Telefone" >Telefone</option>
                 <option value="Telefone2" >Telefone2</option>
                 <option value="Observacoes" >Observações</option>
-                <option value="Data de nascimento" >Data de nascimento</option>
-                <option value="Criado em" >Criado em</option>
-                <option value="Ultima alteracao" >Última alteração</option>
             </select>
           <input type="text" class="form-control" aria-label="Text input with dropdown button"
           v-model="busca" @input="getBuscas">
