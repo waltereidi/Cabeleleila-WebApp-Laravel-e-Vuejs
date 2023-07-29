@@ -35,7 +35,7 @@ class AuthController extends Controller
                 ->where('status' , 1 )        
                 ->first();
 
-            if($usuarios->count() > 0 ){
+            if($usuarios != null && $usuarios->count() > 0 ){
                 session(['email' => $usuarios->email]);
                 session(['tipousuario'=> $usuarios->tipousuario] );
                 return redirect('/');
@@ -66,7 +66,7 @@ class AuthController extends Controller
         }else{
             
             $usuarios = Usuarios::where('email' ,$request->email)->first();
-            if( $usuarios->count() > 0 ){
+            if( $usuarios!= null && $usuarios->count() > 0 ){
                 return Redirect::to('login')->with('mensagem' , 'O email utilizado já possui um cadastro no sistema.');
             }else{
                 Usuarios::create([

@@ -162,9 +162,8 @@
             requestCadastro();
         }else{
             if( !this.trocouData ){
-                let mensagem ="Já existe um agendamento deste cliente nesta semana,deseja utilizar a mesma data deste agendamento"
-                +retorno.data.dataagendamento
-                +"?";
+                let mensagem ="Já existe um agendamento deste cliente nesta semana,deseja utilizar a mesma data deste agendamento?";
+                
                 if(confirm(mensagem)){
                     this.trocouData = true ;
                     this.dataAgendamento = retorno.data[0].dataagendamento ; 
